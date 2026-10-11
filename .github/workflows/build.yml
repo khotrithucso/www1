@@ -16,23 +16,23 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
-      # Tạo thư mục web www và copy file
+      # Tạo thư mục web www và copy file code
       - run: npm init -y
       - run: mkdir -p www
       - run: cp index.html main.js style.css www/ 2>/dev/null || true
 
-      # Cài đặt Capacitor
+      # Cài đặt Capacitor & tạo nền tảng Android
       - run: npm install @capacitor/core @capacitor/cli @capacitor/android
       - run: npx cap init "App Cua Toi" "com.trithucso.appwww1" --web-dir www
       - run: npx cap add android
       - run: npx cap sync
 
-      # Cấp quyền thực thi tệp gradlew trên Linux và biên dịch APK
+      # Cấp quyền thực thi và đóng gói APK
       - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
 
-      # Xuất file APK
+      # Tải file APK kết quả lên Artifacts
       - uses: actions/upload-artifact@v4
         with:
           name: app-debug-apk
