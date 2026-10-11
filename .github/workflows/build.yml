@@ -1,4 +1,4 @@
-name: Build Android APK va AAB
+name: Build Android APK
 on:
   push:
     branches: [ main ]
@@ -18,16 +18,20 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      # Tự động tạo thư mục www và sao chép các file web vào
-      - run: mkdir -p www && cp index.html main.js style.css www/ 2>/dev/null || true
-
+      # Khởi tạo package và chuẩn bị thư mục web www
       - run: npm init -y
+      - run: mkdir -p www
+      - run: cp index.html main.js www/ 2>/dev/null || true
+      - run: cp style.css www/ 2>/dev/null || true
+
+      # Cài đặt Capacitor và đóng gói Android
       - run: npm install @capacitor/core @capacitor/cli @capacitor/android
       - run: npx cap init "App Cua Toi" "com.trithucso.appwww1" --web-dir www
       - run: npx cap add android
       - run: npx cap sync
       - run: cd android && ./gradlew assembleDebug
 
+      # Xuất file APK
       - uses: actions/upload-artifact@v4
         with:
           name: app-debug-apk
