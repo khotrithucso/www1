@@ -33,7 +33,7 @@ document.getElementById('btnBanner').addEventListener('click', async () => {
   if (!isBannerShow) {
     try {
       await AdMob.showBanner({
-        adId: 'ca-app-pub-3940256099942544/6300978111',
+        adId: 'ca-app-pub-3940256099942544/6300978111', // Test Banner ID
         adSize: BannerAdSize.BANNER,
         position: BannerAdPosition.BOTTOM_CENTER,
         margin: 0,
@@ -57,12 +57,12 @@ document.getElementById('btnBanner').addEventListener('click', async () => {
   }
 });
 
-// 2. App Open Ad (Quảng cáo mở app - Dùng mã Interstitial Test 1033173712)
+// 2. App Open Ad (Quảng cáo mở app - Dùng mã Interstitial Test chuẩn)
 document.getElementById('btnAppOpen').addEventListener('click', async () => {
   log("⏳ Đang tải App Open Ad...");
   try {
     await AdMob.prepareInterstitial({
-      adId: 'ca-app-pub-3940256099942544/1033173712',
+      adId: 'ca-app-pub-3940256099942544/1033173712', // Dùng Test Interstitial ID
     });
     await AdMob.showInterstitial();
     log("🚀 Đã mở App Open Ad thành công!");
@@ -71,12 +71,12 @@ document.getElementById('btnAppOpen').addEventListener('click', async () => {
   }
 });
 
-// 3. Interstitial Ad (Quảng cáo xen kẽ full màn hình - Dùng mã 1033173712)
+// 3. Interstitial Ad (Quảng cáo xen kẽ full màn hình)
 document.getElementById('btnInterstitial').addEventListener('click', async () => {
   log("⏳ Đang tải Interstitial Ad...");
   try {
     await AdMob.prepareInterstitial({
-      adId: 'ca-app-pub-3940256099942544/1033173712',
+      adId: 'ca-app-pub-3940256099942544/1033173712', // Test Interstitial ID
     });
     await AdMob.showInterstitial();
     log("🎬 Đã hiển thị Interstitial Ad full màn hình!");
@@ -85,7 +85,7 @@ document.getElementById('btnInterstitial').addEventListener('click', async () =>
   }
 });
 
-// 4. Rewarded Video Ad (Quảng cáo Video có thưởng - Dùng mã 5224354917)
+// 4. Rewarded Video Ad (Quảng cáo Video có thưởng)
 document.getElementById('btnRewarded').addEventListener('click', async () => {
   log("⏳ Đang tải Rewarded Video Ad...");
   try {
@@ -94,7 +94,7 @@ document.getElementById('btnRewarded').addEventListener('click', async () => {
     });
 
     await AdMob.prepareRewardVideoAd({
-      adId: 'ca-app-pub-3940256099942544/5224354917',
+      adId: 'ca-app-pub-3940256099942544/5224354917', // Test Rewarded Video ID
     });
     await AdMob.showRewardVideoAd();
     log("🎬 Đang chiếu Rewarded Video Ad (Xem hết nhận quà)...");
@@ -103,12 +103,12 @@ document.getElementById('btnRewarded').addEventListener('click', async () => {
   }
 });
 
-// 5. Rewarded Interstitial Ad (Xen kẽ thưởng - Dùng mã 5224354917)
+// 5. Rewarded Interstitial Ad (Xen kẽ thưởng - Dùng mã Rewarded Test chuẩn)
 document.getElementById('btnRewardedInter').addEventListener('click', async () => {
   log("⏳ Đang tải Rewarded Interstitial Ad...");
   try {
     await AdMob.prepareRewardVideoAd({
-      adId: 'ca-app-pub-3940256099942544/5224354917',
+      adId: 'ca-app-pub-3940256099942544/5224354917', // Dùng Test Rewarded Video ID
     });
     await AdMob.showRewardVideoAd();
     log("🎬 Đã chiếu Rewarded Interstitial Ad!");
@@ -117,12 +117,12 @@ document.getElementById('btnRewardedInter').addEventListener('click', async () =
   }
 });
 
-// 6. Native Ad (Dạng Card 300x250 MREC - Dùng mã Banner Test 6300978111 với MEDIUM_RECTANGLE)
+// 6. Native Ad (Dạng Thẻ MREC 300x250 - Dùng mã Banner Test chuẩn)
 document.getElementById('btnNative').addEventListener('click', async () => {
   log("⏳ Đang tải Native Ad (MREC)...");
   try {
     await AdMob.showBanner({
-      adId: 'ca-app-pub-3940256099942544/6300978111',
+      adId: 'ca-app-pub-3940256099942544/6300978111', // Dùng Test Banner ID cho MREC
       adSize: BannerAdSize.MEDIUM_RECTANGLE,
       position: BannerAdPosition.CENTER,
     });
