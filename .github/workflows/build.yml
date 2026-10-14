@@ -18,23 +18,26 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      # 1. Tạo thư mục www và sao chép file web vào
+      # 1. Tạo thư mục www và copy CSS/HTML
       - run: npm init -y
       - run: mkdir -p www
-      - run: cp index.html main.js style.css www/ 2>/dev/null || true
+      - run: cp index.html style.css www/ 2>/dev/null || true
 
-      # 2. Cài đặt Capacitor & Plugin AdMob
-      - run: npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor-community/admob
+      # 2. Cài đặt Capacitor, AdMob & esbuild để đóng gói JS
+      - run: npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor-community/admob esbuild
 
-      # 3. Khởi tạo Capacitor & Nền tảng Android
+      # 3. ĐÓNG GÓI MAIN.JS CÓ CHỨA IMPORT THÀNH FILE WWW/MAIN.JS
+      - run: npx esbuild main.js --bundle --outfile=www/main.js
+
+      # 4. Khởi tạo Capacitor & Nền tảng Android
       - run: npx cap init "App AdMob Test" "com.trithucso.admobtest" --web-dir www
       - run: npx cap add android
 
-      # 4. CHÈN MÃ ADMOB APPLICATION_ID VÀO ANDROIDMANIFEST.XML ĐỂ TRÁNH CRASH OUT APP
+      # 5. CHÈN MÃ ADMOB APPLICATION_ID VÀO ANDROIDMANIFEST.XML
       - run: |
           sed -i '/<\/application>/i \    <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-3940256099942544~3347511713"/>' android/app/src/main/AndroidManifest.xml
 
-      # 5. Sửa lỗi xung đột thư viện Kotlin trùng lặp
+      # 6. Sửa lỗi xung đột thư viện Kotlin trùng lặp
       - run: |
           echo "
           configurations.all {
@@ -43,13 +46,13 @@ jobs:
           }
           " >> android/app/build.gradle
 
-      # 6. Đồng bộ Capacitor sang thư mục Android
+      # 7. Đồng bộ Capacitor sang Android
       - run: npx cap sync
 
-      # 7. Cấp quyền thực thi gradlew và biên dịch file APK
+      # 8. Biên dịch file APK
       - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
 
-      # 8. Tải file APK kết quả lên Artifacts
+      # 9. Tải file APK kết quả lên Artifacts
       - uses: actions/upload-artifact@v4
         with:
           name: app-debug-apk

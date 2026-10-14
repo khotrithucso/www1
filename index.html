@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AdMob 6 Ad Types Test Demo</title>
   <link rel="stylesheet" href="style.css" />
+  <script>
+    // Bắt lỗi JS trực tiếp ngay trong HTML
+    window.onerror = function (msg, url, line) {
+      alert("LỖI JS: " + msg + "\nDòng: " + line);
+      return true;
+    };
+  </script>
 </head>
 <body>
 
@@ -25,6 +32,6 @@
     <div id="logBox">Đang khởi tạo AdMob SDK...</div>
   </div>
 
-  <script type="module" src="main.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
