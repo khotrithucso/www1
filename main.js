@@ -1,22 +1,30 @@
 import { AdMob, BannerAdSize, BannerAdPosition, RewardAdPluginEvents } from '@capacitor-community/admob';
 
+// Bắt lỗi JS toàn cục hiển thị Alert thay vì văng app
+window.onerror = function (message, source, lineno, colno, error) {
+  alert("LỖI RUNTIME APP:\n" + message + "\nTại dòng: " + lineno);
+  return true;
+};
+
 function log(msg) {
   const logBox = document.getElementById('logBox');
-  const time = new Date().toLocaleTimeString('vi-VN');
-  logBox.innerHTML += `<br>[${time}] ${msg}`;
-  logBox.scrollTop = logBox.scrollHeight;
+  if (logBox) {
+    const time = new Date().toLocaleTimeString('vi-VN');
+    logBox.innerHTML += `<br>[${time}] ${msg}`;
+    logBox.scrollTop = logBox.scrollHeight;
+  }
 }
 
 // 0. Khởi tạo AdMob SDK
 async function initAdMob() {
   try {
     await AdMob.initialize({
-      testingDevices: ['20775d1031133059'], // Mã thiết bị test nếu có
+      testingDevices: ['20775d1031133059'],
       initializeForTesting: true,
     });
     log("✅ AdMob SDK đã khởi tạo thành công!");
   } catch (err) {
-    log("❌ Lỗi khởi tạo AdMob: " + JSON.stringify(err));
+    log("❌ Lỗi khởi tạo AdMob: " + (err.message || JSON.stringify(err)));
   }
 }
 
@@ -38,11 +46,15 @@ document.getElementById('btnBanner').addEventListener('click', async () => {
       log("❌ Lỗi Banner: " + e.message);
     }
   } else {
-    await AdMob.hideBanner();
-    await AdMob.removeBanner();
-    log("🙈 Đã ẩn Banner Ad!");
-    document.getElementById('btnBanner').innerText = "1. Hiện Banner Ad ($320x50)";
-    isBannerShow = false;
+    try {
+      await AdMob.hideBanner();
+      await AdMob.removeBanner();
+      log("🙈 Đã ẩn Banner Ad!");
+      document.getElementById('btnBanner').innerText = "1. Hiện Banner Ad (320x50)";
+      isBannerShow = false;
+    } catch (e) {
+      log("❌ Lỗi ẩn Banner: " + e.message);
+    }
   }
 });
 
@@ -50,7 +62,6 @@ document.getElementById('btnBanner').addEventListener('click', async () => {
 document.getElementById('btnAppOpen').addEventListener('click', async () => {
   log("⏳ Đang tải App Open Ad...");
   try {
-    // Với App Open Ad, gọi chuẩn bị và hiển thị qua Interstitial hoặc AppOpen API
     await AdMob.prepareInterstitial({
       adId: 'ca-app-pub-3940256099942544/9257395921', // Test App Open ID
     });
@@ -79,7 +90,6 @@ document.getElementById('btnInterstitial').addEventListener('click', async () =>
 document.getElementById('btnRewarded').addEventListener('click', async () => {
   log("⏳ Đang tải Rewarded Video Ad...");
   try {
-    // Lắng nghe sự kiện người dùng xem hết video nhận thưởng
     AdMob.addListener(RewardAdPluginEvents.Rewarded, (reward) => {
       log(`🎁 NGƯỜI DÙNG ĐÃ XEM HẾT VIDEO! Nhận thưởng: ${reward.amount} ${reward.type}`);
     });
@@ -88,7 +98,7 @@ document.getElementById('btnRewarded').addEventListener('click', async () => {
       adId: 'ca-app-pub-3940256099942544/5224354917', // Test Rewarded ID
     });
     await AdMob.showRewardVideoAd();
-    log("🎬 Đang chiếu Rewarded Video Ad (Bắt buộc xem hết để lấy quà)...");
+    log("🎬 Đang chiếu Rewarded Video Ad (Bắt buộc xem hết)...");
   } catch (e) {
     log("❌ Lỗi Rewarded Video: " + e.message);
   }
@@ -108,17 +118,16 @@ document.getElementById('btnRewardedInter').addEventListener('click', async () =
   }
 });
 
-// 6. Native Ad (Quảng cáo tự nhiên lồng khung)
+// 6. Native Ad (Quảng cáo tự nhiên)
 document.getElementById('btnNative').addEventListener('click', async () => {
   log("⏳ Đang tải Native Ad...");
   try {
-    // Khởi chạy Native Ad với layout tùy biến hoặc MREC
     await AdMob.showBanner({
       adId: 'ca-app-pub-3940256099942544/2247696110', // Test Native Advanced ID
-      adSize: BannerAdSize.MEDIUM_RECTANGLE, // Kích thước $300\times250$ dạng Native Card
+      adSize: BannerAdSize.MEDIUM_RECTANGLE,
       position: BannerAdPosition.CENTER,
     });
-    log("🖼️ Đã hiển thị Native Ad dạng Card $300\times250$ ở chính giữa!");
+    log("🖼️ Đã hiển thị Native Ad (MREC 300x250) ở chính giữa!");
   } catch (e) {
     log("❌ Lỗi Native Ad: " + e.message);
   }

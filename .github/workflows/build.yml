@@ -18,18 +18,23 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      # 1. Tạo thư mục www và sao chép file web vào
       - run: npm init -y
       - run: mkdir -p www
       - run: cp index.html main.js style.css www/ 2>/dev/null || true
 
-      # Cài đặt Capacitor & Plugin AdMob Community
+      # 2. Cài đặt Capacitor & Plugin AdMob
       - run: npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor-community/admob
 
+      # 3. Khởi tạo Capacitor & Nền tảng Android
       - run: npx cap init "App AdMob Test" "com.trithucso.admobtest" --web-dir www
       - run: npx cap add android
-      - run: npx cap sync
 
-      # Sửa lỗi thư viện Kotlin trùng lặp
+      # 4. CHÈN MÃ ADMOB APPLICATION_ID VÀO ANDROIDMANIFEST.XML ĐỂ TRÁNH CRASH OUT APP
+      - run: |
+          sed -i '/<\/application>/i \    <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-3940256099942544~3347511713"/>' android/app/src/main/AndroidManifest.xml
+
+      # 5. Sửa lỗi xung đột thư viện Kotlin trùng lặp
       - run: |
           echo "
           configurations.all {
@@ -38,12 +43,14 @@ jobs:
           }
           " >> android/app/build.gradle
 
-      # Cấp quyền thực thi và biên dịch APK
+      # 6. Đồng bộ Capacitor sang thư mục Android
+      - run: npx cap sync
+
+      # 7. Cấp quyền thực thi gradlew và biên dịch file APK
       - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
 
-      # Tải file APK kết quả lên Artifacts
+      # 8. Tải file APK kết quả lên Artifacts
       - uses: actions/upload-artifact@v4
         with:
           name: app-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
- 

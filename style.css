@@ -1,0 +1,86 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #0f172a;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+.card {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+h2 {
+  margin-bottom: 15px;
+  color: #38bdf8;
+  font-size: 20px;
+}
+
+h3 {
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #94a3b8;
+}
+
+.btn-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:active {
+  transform: scale(0.98);
+  background: #1d4ed8;
+}
+
+button.reward {
+  background: #059669;
+}
+
+button.reward:active {
+  background: #047857;
+}
+
+button.native {
+  background: #d97706;
+}
+
+button.native:active {
+  background: #b45309;
+}
+
+#logBox {
+  background: #000;
+  color: #10b981;
+  font-family: monospace;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: left;
+  font-size: 12px;
+  max-height: 150px;
+  overflow-y: auto;
+  margin-top: 10px;
+}
+ 
