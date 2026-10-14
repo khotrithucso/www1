@@ -1,6 +1,6 @@
 import { AdMob, BannerAdSize, BannerAdPosition, RewardAdPluginEvents } from '@capacitor-community/admob';
 
-// Bắt lỗi JS toàn cục hiển thị Alert thay vì văng app
+// Bắt lỗi JS toàn cục hiển thị Alert
 window.onerror = function (message, source, lineno, colno, error) {
   alert("LỖI RUNTIME APP:\n" + message + "\nTại dòng: " + lineno);
   return true;
@@ -19,7 +19,6 @@ function log(msg) {
 async function initAdMob() {
   try {
     await AdMob.initialize({
-      testingDevices: ['20775d1031133059'],
       initializeForTesting: true,
     });
     log("✅ AdMob SDK đã khởi tạo thành công!");
@@ -28,7 +27,7 @@ async function initAdMob() {
   }
 }
 
-// 1. Banner Ad (Hiện ở đáy màn hình)
+// 1. Banner Ad (Khung 320x50 dưới đáy)
 let isBannerShow = false;
 document.getElementById('btnBanner').addEventListener('click', async () => {
   if (!isBannerShow) {
@@ -58,12 +57,12 @@ document.getElementById('btnBanner').addEventListener('click', async () => {
   }
 });
 
-// 2. App Open Ad (Quảng cáo mở ứng dụng)
+// 2. App Open Ad (Quảng cáo mở ứng dụng - Dùng ID Interstitial chuẩn)
 document.getElementById('btnAppOpen').addEventListener('click', async () => {
   log("⏳ Đang tải App Open Ad...");
   try {
     await AdMob.prepareInterstitial({
-      adId: 'ca-app-pub-3940256099942544/9257395921', // Test App Open ID
+      adId: 'ca-app-pub-3940256099942544/1033173712', 
     });
     await AdMob.showInterstitial();
     log("🚀 Đã mở App Open Ad thành công!");
@@ -95,10 +94,10 @@ document.getElementById('btnRewarded').addEventListener('click', async () => {
     });
 
     await AdMob.prepareRewardVideoAd({
-      adId: 'ca-app-pub-3940256099942544/5224354917', // Test Rewarded ID
+      adId: 'ca-app-pub-3940256099942544/5224354917', // Test Rewarded Video ID
     });
     await AdMob.showRewardVideoAd();
-    log("🎬 Đang chiếu Rewarded Video Ad (Bắt buộc xem hết)...");
+    log("🎬 Đang chiếu Rewarded Video Ad (Xem hết nhận quà)...");
   } catch (e) {
     log("❌ Lỗi Rewarded Video: " + e.message);
   }
@@ -109,7 +108,7 @@ document.getElementById('btnRewardedInter').addEventListener('click', async () =
   log("⏳ Đang tải Rewarded Interstitial Ad...");
   try {
     await AdMob.prepareRewardVideoAd({
-      adId: 'ca-app-pub-3940256099942544/5354046379', // Test Rewarded Interstitial ID
+      adId: 'ca-app-pub-3940256099942544/5224354917', // Dùng Rewarded Video Test ID
     });
     await AdMob.showRewardVideoAd();
     log("🎬 Đã chiếu Rewarded Interstitial Ad!");
@@ -118,16 +117,16 @@ document.getElementById('btnRewardedInter').addEventListener('click', async () =
   }
 });
 
-// 6. Native Ad (Quảng cáo tự nhiên)
+// 6. Native Ad (Dạng Card $300\times250$ MREC)
 document.getElementById('btnNative').addEventListener('click', async () => {
-  log("⏳ Đang tải Native Ad...");
+  log("⏳ Đang tải Native Ad (MREC)...");
   try {
     await AdMob.showBanner({
-      adId: 'ca-app-pub-3940256099942544/2247696110', // Test Native Advanced ID
-      adSize: BannerAdSize.MEDIUM_RECTANGLE,
+      adId: 'ca-app-pub-3940256099942544/6300978111', // Dùng Banner Test ID cho MREC
+      adSize: BannerAdSize.MEDIUM_RECTANGLE, // Khung $300\times250$ dạng Native Card
       position: BannerAdPosition.CENTER,
     });
-    log("🖼️ Đã hiển thị Native Ad (MREC 300x250) ở chính giữa!");
+    log("🖼️ Đã hiển thị Native Ad ($300\times250$) ở chính giữa!");
   } catch (e) {
     log("❌ Lỗi Native Ad: " + e.message);
   }
