@@ -1,0 +1,48 @@
+name: Build Android APK
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      # Tạo thư mục web www và copy file
+      - run: npm init -y
+      - run: mkdir -p www
+      - run: cp index.html main.js style.css www/ 2>/dev/null || true
+
+      # Cài đặt Capacitor & khởi tạo nền tảng Android
+      - run: npm install @capacitor/core @capacitor/cli @capacitor/android
+      - run: npx cap init "App Cua Toi" "com.trithucso.appwww1" --web-dir www
+      - run: npx cap add android
+      - run: npx cap sync
+
+      # Tự động chèn cấu hình loại bỏ thư viện Kotlin trùng lặp
+      - run: |
+          echo "
+          configurations.all {
+              exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
+              exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+          }
+          " >> android/app/build.gradle
+
+      # Cấp quyền thực thi và biên dịch APK
+      - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
+
+      # Tải file APK kết quả lên Artifacts
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk

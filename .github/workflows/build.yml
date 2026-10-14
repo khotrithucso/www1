@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Build Android APK AdMob Test
 on:
   push:
     branches: [ main ]
@@ -18,18 +18,18 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      # Tạo thư mục web www và copy file
       - run: npm init -y
       - run: mkdir -p www
       - run: cp index.html main.js style.css www/ 2>/dev/null || true
 
-      # Cài đặt Capacitor & khởi tạo nền tảng Android
-      - run: npm install @capacitor/core @capacitor/cli @capacitor/android
-      - run: npx cap init "App Cua Toi" "com.trithucso.appwww1" --web-dir www
+      # Cài đặt Capacitor & Plugin AdMob Community
+      - run: npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor-community/admob
+
+      - run: npx cap init "App AdMob Test" "com.trithucso.admobtest" --web-dir www
       - run: npx cap add android
       - run: npx cap sync
 
-      # Tự động chèn cấu hình loại bỏ thư viện Kotlin trùng lặp
+      # Sửa lỗi thư viện Kotlin trùng lặp
       - run: |
           echo "
           configurations.all {
@@ -46,3 +46,4 @@ jobs:
         with:
           name: app-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
+ 
